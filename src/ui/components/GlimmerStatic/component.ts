@@ -32,6 +32,9 @@ export default class GlimmerStatic extends Component {
       this.router.on(path, () => this.activeComponent = component);
     });
     this.router.resolve(window.location.pathname);
+
+    //expose router globally to allow prerenderer to navigate
+    window.__router__ = this.router;
   }
 
   private _bindInternalLinks() {
