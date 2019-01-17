@@ -4,8 +4,10 @@ const fs = require('fs-extra')
 const express = require('express');
 const puppeteer = require('puppeteer');
 const colors = require('colors');
+const critical = require('critical');
 
-const routesMap = require('../config/routes-map');
+const ROUTES_MAP = require('../config/routes-map')();
+const DIST_PATH = path.join(__dirname, '..', 'dist');
 
 async function snapshot(browser, routePath) {
   let page = await browser.newPage();
@@ -17,7 +19,7 @@ async function snapshot(browser, routePath) {
 }
 
 async function persist(html, routePath) {
-  let fileName = path.join(distPath, routePath, 'index.html');
+  let fileName = path.join(DIST_PATH, routePath, 'index.html');
 
   await fs.ensureDir(path.dirname(fileName), { recursive: true });
   let exists = await fs.exists(fileName);
@@ -29,18 +31,30 @@ async function persist(html, routePath) {
   return fileName;
 }
 
+async function inlineCss(fileName) {
+  let input = await fs.readFile(fileName, 'utf8');
+  let result = await critical.generate({
+    inline: true,
+    base: DIST_PATH,
+    html: input,
+    width: 1300,
+    height: 900
+  });
+  await fs.writeFile(fileName, result.toString('utf8'));
+}
+
 let server = express();
-let distPath = path.join(__dirname, '..', 'dist');
-server.use(express.static(distPath));
+server.use(express.static(DIST_PATH));
 
 server.listen(3000, async function () {
   let browser = await puppeteer.launch({ headless: true });
-  let routes = routesMap();
+  let routes = ROUTES_MAP;
   let paths = Object.keys(routes);
 
   await Promise.all(paths.map(async (routePath) => {
     let html = await snapshot(browser, routePath);
     let fileName = await persist(html, routePath);
+    await inlineCss(fileName);
 
     console.log(`${routePath} => ${fileName}.`.blue);
   }));
