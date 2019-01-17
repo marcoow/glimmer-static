@@ -1,8 +1,18 @@
 import Component, { tracked } from '@glimmer/component';
 import Navigo from 'navigo';
 
+interface IRoutesMap {
+  [route: string]: {
+    component: string;
+  };
+}
+
+declare const __ROUTES_MAP__: IRoutesMap;
+
 export default class GlimmerStatic extends Component {
   private router: Navigo;
+
+  private routesMap: IRoutesMap = __ROUTES_MAP__;
 
   @tracked
   private activeComponent: string;
@@ -17,12 +27,11 @@ export default class GlimmerStatic extends Component {
   private _setupRouting() {
     this.router = new Navigo(window.location.origin);
 
-    this.router
-      .on('/', () => this.activeComponent = null)
-      .on('/a', () => this.activeComponent = 'ComponentA')
-      .on('/b', () => this.activeComponent = 'ComponentB')
-      .on('/c', () => this.activeComponent = 'ComponentC')
-      .resolve(window.location.pathname);
+    Object.keys(this.routesMap).forEach((path) => {
+      let { component } = this.routesMap[path];
+      this.router.on(path, () => this.activeComponent = component);
+    });
+    this.router.resolve(window.location.pathname);
   }
 
   private _bindInternalLinks() {
