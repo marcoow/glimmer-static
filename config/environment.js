@@ -2,8 +2,8 @@
 
 module.exports = function(environment) {
   let ENV = {
-    modulePrefix: 'glimmer-static',
-    environment
+    environment,
+    modulePrefix: 'glimmer-static'
   };
 
   return ENV;
