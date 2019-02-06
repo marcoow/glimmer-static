@@ -7,7 +7,6 @@ const GlimmerApp = require('@glimmer/application-pipeline').GlimmerApp;
 const BroccoliCleanCss = require('broccoli-clean-css');
 const Funnel = require('broccoli-funnel');
 const Map = require('broccoli-stew').map;
-const BroccoliDebug = require('broccoli-debug');
 
 class GlimmerStaticApp extends GlimmerApp {
   cssTree() {
@@ -23,11 +22,6 @@ class GlimmerStaticApp extends GlimmerApp {
     }
 	
     return cssTree;
-  }
-
-  rollupTree(jsTree, options) {
-    let tree = new BroccoliDebug(jsTree, 'app:rollup');
-    return super.rollupTree(tree, options);
   }
 }
 
