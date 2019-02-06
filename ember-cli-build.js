@@ -7,6 +7,7 @@ const GlimmerApp = require('@glimmer/application-pipeline').GlimmerApp;
 const BroccoliCleanCss = require('broccoli-clean-css');
 const Funnel = require('broccoli-funnel');
 const Map = require('broccoli-stew').map;
+const glob = require('glob');
 
 class GlimmerStaticApp extends GlimmerApp {
   cssTree() {
@@ -26,9 +27,13 @@ class GlimmerStaticApp extends GlimmerApp {
 }
 
 module.exports = function(defaults) {
+  let allComponents = glob.sync('*/', {
+    cwd: path.join(__dirname, 'src/ui/components')
+  }).map((component) => component.replace(/\/$/, ''));
+
   let app = new GlimmerStaticApp(defaults, {
     'css-blocks': {
-      entry: 'GlimmerStatic',
+      entry: allComponents,
       output: 'src/ui/styles/app.css',
     },
     minifyCSS: {
