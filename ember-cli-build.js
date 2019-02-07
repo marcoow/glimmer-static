@@ -27,7 +27,7 @@ function findAllComponents() {
   return [...new Set(allComponents)]; 
 }
 
-class GlimmerStaticApp extends GlimmerApp {
+class SimplabsApp extends GlimmerApp {
   cssTree() {
     let resetCss = fs.readFileSync(path.join(this.project.root, 'vendor', 'css', 'reset.css'));
     let cssTree = Funnel(super.cssTree(...arguments), {
@@ -47,7 +47,7 @@ class GlimmerStaticApp extends GlimmerApp {
 module.exports = function(defaults) {
   let allComponents = findAllComponents();
 
-  let app = new GlimmerStaticApp(defaults, {
+  let app = new SimplabsApp(defaults, {
     'css-blocks': {
       entry: allComponents,
       output: 'src/ui/styles/app.css',

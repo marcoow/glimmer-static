@@ -3,7 +3,7 @@
 module.exports = function(environment) {
   let ENV = {
     environment,
-    modulePrefix: 'glimmer-static'
+    modulePrefix: 'simplabs'
   };
 
   return ENV;

@@ -3,11 +3,11 @@ import { setupRenderingTest } from '@glimmer/test-helpers';
 
 const { module, test } = QUnit;
 
-module('Component: GlimmerStatic', function(hooks) {
+module('Component: Simplabs', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    await this.render(hbs`<GlimmerStatic />`);
+    await this.render(hbs`<Simplabs />`);
     assert.equal(this.containerElement.textContent, 'Welcome to Glimmer!\n');
   });
 });

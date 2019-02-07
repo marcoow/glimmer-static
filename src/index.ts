@@ -25,6 +25,6 @@ app.registerInitializer({
   }
 });
 
-app.renderComponent('GlimmerStatic', containerElement, null);
+app.renderComponent('Simplabs', containerElement, null);
 
 app.boot();

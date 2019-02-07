@@ -9,7 +9,7 @@ interface IRoutesMap {
 
 declare const __ROUTES_MAP__: IRoutesMap;
 
-export default class GlimmerStatic extends Component {
+export default class Simplabs extends Component {
   private router: Navigo;
 
   private routesMap: IRoutesMap = __ROUTES_MAP__;
