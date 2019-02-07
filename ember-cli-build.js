@@ -9,6 +9,24 @@ const Funnel = require('broccoli-funnel');
 const Map = require('broccoli-stew').map;
 const glob = require('glob');
 
+function findAllComponents() {
+  let routes = require('./config/routes-map')();
+  let routedComponents = Object.keys(routes).reduce(function(acc, key) {
+    let component = routes[key].component;
+    if (component) {
+      acc.push(component);
+    }
+    return acc;
+  }, []);
+
+  let staticComponents = glob.sync('*/', {
+    cwd: path.join(__dirname, 'src/ui/components')
+  }).map((component) => component.replace(/\/$/, ''));
+
+  let allComponents = routedComponents.concat(staticComponents);
+  return [...new Set(allComponents)]; 
+}
+
 class GlimmerStaticApp extends GlimmerApp {
   cssTree() {
     let resetCss = fs.readFileSync(path.join(this.project.root, 'vendor', 'css', 'reset.css'));
@@ -27,9 +45,7 @@ class GlimmerStaticApp extends GlimmerApp {
 }
 
 module.exports = function(defaults) {
-  let allComponents = glob.sync('*/', {
-    cwd: path.join(__dirname, 'src/ui/components')
-  }).map((component) => component.replace(/\/$/, ''));
+  let allComponents = findAllComponents();
 
   let app = new GlimmerStaticApp(defaults, {
     'css-blocks': {
